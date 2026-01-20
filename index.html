@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>VIP INVITATION - CẢNH HÀO</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700;900&family=Montserrat:wght@300;400;700;900&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --gold: #d4af37;
+            --gold-light: #f1d592;
+            --dark-emerald: #022a1a;
+            --glass: rgba(255, 255, 255, 0.95);
+        }
+
+        body, html {
+            margin: 0; padding: 0; height: 100%; overflow: hidden;
+            background: #000; font-family: 'Montserrat', sans-serif;
+        }
+
+        /* Nền hiệu ứng mạng lưới Neon */
+        #particle-canvas { position: absolute; width: 100%; height: 100%; z-index: 1; opacity: 0.5; }
+
+        .main-stage {
+            position: relative; z-index: 10;
+            display: flex; justify-content: center; align-items: center;
+            height: 100%; width: 100%;
+        }
+
+        /* Nút kích hoạt nhảy nảy */
+        .intro-zone { text-align: center; }
+        .flask {
+            font-size: 110px; cursor: pointer;
+            filter: drop-shadow(0 0 30px var(--gold));
+            animation: superBounce 1.2s infinite alternate cubic-bezier(0.6, -0.28, 0.7, 0.05);
+            display: block; margin-bottom: 30px;
+        }
+
+        @keyframes superBounce {
+            from { transform: translateY(0) scale(1, 1); }
+            to { transform: translateY(-60px) scale(0.9, 1.2); }
+        }
+
+        #btn-trigger {
+            padding: 18px 50px; font-weight: 900; font-size: 20px;
+            background: linear-gradient(135deg, var(--gold-light), var(--gold));
+            color: #000; border: none; border-radius: 50px;
+            cursor: pointer; box-shadow: 0 0 30px rgba(212, 175, 55, 0.4);
+            transition: 0.3s; text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        /* THIẾT KẾ THIỆP MỜI CAO CẤP */
+        #invitation-card {
+            display: none;
+            width: 90%;
+            max-width: 650px;
+            background: var(--glass);
+            padding: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 100px rgba(0,0,0,0.5), inset 0 0 50px rgba(212, 175, 55, 0.1);
+            position: relative;
+            /* Hiệu ứng nảy elastic khi hiện ra */
+            animation: elasticShow 1s cubic-bezier(0.68, -0.55, 0.265, 1.55) forwards;
+        }
+
+        @keyframes elasticShow {
+            0% { transform: scale(0) rotate(-10deg); opacity: 0; }
+            100% { transform: scale(1) rotate(0deg); opacity: 1; }
+        }
+
+        /* Viền họa tiết hoa văn mạ vàng */
+        .card-border-outer {
+            border: 2px solid var(--gold);
+            padding: 10px;
+            height: 100%;
+            position: relative;
+        }
+
+        .card-inner-box {
+            background: #fff;
+            border: 1px solid var(--gold-light);
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+            /* Họa tiết hóa học chìm */
+            background-image: url('https://www.transparenttextures.com/patterns/hexellence.png');
+        }
+
+        /* Bốn góc hoa văn Art Deco */
+        .corner {
+            position: absolute; width: 60px; height: 60px;
+            border: 3px solid var(--gold);
+        }
+        .top-left { top: -5px; left: -5px; border-right: none; border-bottom: none; }
+        .top-right { top: -5px; right: -5px; border-left: none; border-bottom: none; }
+        .bottom-left { bottom: -5px; left: -5px; border-right: none; border-top: none; }
+        .bottom-right { bottom: -5px; right: -5px; border-left: none; border-top: none; }
+
+        .header-label {
+            font-family: 'Montserrat', sans-serif;
+            font-weight: 700; letter-spacing: 6px;
+            color: var(--gold); font-size: 14px; margin-bottom: 25px;
+        }
+
+        .guest-name {
+            font-family: 'Montserrat', sans-serif;
+            font-size: 36px; font-weight: 900;
+            color: var(--dark-emerald); margin: 0;
+            letter-spacing: -1px;
+        }
+
+        .guest-title {
+            font-size: 16px; color: #666; font-weight: 400;
+            margin-top: 5px; text-transform: uppercase; letter-spacing: 2px;
+        }
+
+        .title-main {
+            font-family: 'Cinzel', serif;
+            font-size: 58px; font-weight: 900;
+            color: #111; margin: 30px 0;
+            line-height: 1;
+            text-shadow: 2px 2px 0px var(--gold-light);
+        }
+
+        .divider-molecule {
+            display: flex; align-items: center; justify-content: center; margin: 30px 0;
+        }
+        .line { hieght: 1px; width: 80px; height: 1px; background: var(--gold); }
+        .dot { width: 8px; height: 8px; background: var(--gold); border-radius: 50%; margin: 0 10px; }
+
+        .info-container {
+            display: flex; justify-content: space-around;
+            margin: 40px 0;
+        }
+
+        .info-box { text-align: center; }
+        .info-box span { display: block; font-size: 12px; color: #888; font-weight: 700; text-transform: uppercase; }
+        .info-box b { font-size: 22px; color: var(--dark-emerald); font-weight: 900; }
+
+        .address-box {
+            border-top: 1px double var(--gold-light);
+            padding-top: 25px; margin-top: 20px;
+        }
+        .address-box p { font-size: 16px; color: #444; margin: 0; font-weight: 500; }
+
+        .footer-brand {
+            margin-top: 50px; font-family: 'Cinzel', serif;
+            font-weight: 900; font-size: 18px; color: var(--gold);
+        }
+
+    </style>
+</head>
+<body>
+
+    <canvas id="particle-canvas"></canvas>
+
+    <div class="main-stage">
+        <div class="intro-zone" id="intro">
+            <div class="flask" onclick="explode()">🧪</div>
+            <button id="btn-trigger" onclick="explode()">KÍNH MỜI MỞ THIỆP</button>
+        </div>
+
+        <div id="invitation-card">
+            <div class="card-border-outer">
+                <div class="corner top-left"></div>
+                <div class="corner top-right"></div>
+                <div class="corner bottom-left"></div>
+                <div class="corner bottom-right"></div>
+
+                <div class="card-inner-box">
+                    <div class="header-label">TRÂN TRỌNG KÍNH MỜI</div>
+                    
+                    <div class="recipient-section">
+                        <p class="guest-name">NGUYỄN PHÚ QUÝ</p>
+                        <p class="guest-title">Tổng Giám Đốc Vinagreen</p>
+                    </div>
+
+                    <div class="divider-molecule">
+                        <div class="line"></div>
+                        <div class="dot"></div>
+                        <div class="line"></div>
+                    </div>
+
+                    <div class="title-main">TIỆC TẤT NIÊN</div>
+
+                    <div class="info-container">
+                        <div class="info-box">
+                            <span>Thời Gian</span>
+                            <b>18:00</b>
+                        </div>
+                        <div class="info-box">
+                            <span>Địa Điểm</span>
+                            <b> Nhà hàng DIM TU TAC</b>
+                        </div>
+                    </div>
+
+                    <div class="address-box">
+                        <p>55 Đông Du, Bến Nghé, Quận 1, TP.HCM</p>
+                    </div>
+
+                    <div class="footer-brand">CÔNG TY TNHH TM CẢNH HÀO</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
+    <script>
+        // Hiệu ứng hạt liên kết (Hóa học) ở nền
+        const canvas = document.getElementById('particle-canvas');
+        const ctx = canvas.getContext('2d');
+        let particles = [];
+        function init() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+        }
+        class P {
+            constructor() {
+                this.x = Math.random() * canvas.width;
+                this.y = Math.random() * canvas.height;
+                this.vx = Math.random() * 1.5 - 0.75;
+                this.vy = Math.random() * 1.5 - 0.75;
+            }
+            update() {
+                this.x += this.vx; this.y += this.vy;
+                if(this.x<0||this.x>canvas.width) this.vx*=-1;
+                if(this.y<0||this.y>canvas.height) this.vy*=-1;
+            }
+        }
+        for(let i=0; i<80; i++) particles.push(new P());
+        function anim() {
+            ctx.clearRect(0,0,canvas.width,canvas.height);
+            ctx.strokeStyle = '#d4af37'; ctx.lineWidth = 0.6;
+            particles.forEach(p => {
+                p.update();
+                particles.forEach(p2 => {
+                    let d = Math.hypot(p.x-p2.x, p.y-p2.y);
+                    if(d<180) {
+                        ctx.globalAlpha = 1 - d/180;
+                        ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(p2.x,p2.y); ctx.stroke();
+                    }
+                });
+            });
+            requestAnimationFrame(anim);
+        }
+        init(); window.onresize = init; anim();
+
+        function explode() {
+            document.getElementById('intro').style.display = 'none';
+            const card = document.getElementById('invitation-card');
+            card.style.display = 'block';
+
+            // Pháo hoa hoàng gia (Vàng & Trắng)
+            const colors = ['#d4af37', '#f1d592', '#ffffff', '#022a1a'];
+            var end = Date.now() + (2.5 * 1000);
+
+            (function frame() {
+                confetti({
+                    particleCount: 7,
+                    angle: 60,
+                    spread: 70,
+                    origin: { x: 0 },
+                    colors: colors
+                });
+                confetti({
+                    particleCount: 7,
+                    angle: 120,
+                    spread: 70,
+                    origin: { x: 1 },
+                    colors: colors
+                });
+                if (Date.now() < end) requestAnimationFrame(frame);
+            }());
+
+            confetti({
+                particleCount: 200,
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: colors,
+                gravity: 0.8,
+                scalar: 1.2
+            });
+        }
+    </script>
+</body>
+</html>
