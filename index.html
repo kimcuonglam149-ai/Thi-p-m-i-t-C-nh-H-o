@@ -22,7 +22,6 @@
             overflow-x: hidden; color: #fff;
         }
 
-        /* Nền hiệu ứng mạng lưới */
         #particle-canvas { 
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
             z-index: 1; opacity: 0.6; pointer-events: none;
@@ -35,32 +34,69 @@
             padding: 20px;
         }
 
-        /* KHU VỰC INTRO */
+        /* KHU VỰC MINI GAME */
         .intro-zone { 
             text-align: center; 
             transition: var(--transition);
         }
         
+        .flask-container {
+            position: relative;
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
         .flask {
-            font-size: 80px; cursor: pointer;
+            font-size: 100px; cursor: pointer;
             filter: drop-shadow(0 0 20px var(--gold));
-            animation: float 3s ease-in-out infinite;
-            display: block; margin-bottom: 20px;
+            display: block;
+            user-select: none;
+            transition: transform 0.1s;
         }
 
-        @keyframes float {
-            0%, 100% { transform: translateY(0) rotate(0deg); }
-            50% { transform: translateY(-20px) rotate(5deg); }
+        .shake-anim {
+            animation: shake 0.5s infinite;
         }
 
-        #btn-trigger {
-            padding: 16px 40px; font-weight: 700; font-size: 16px;
-            background: linear-gradient(135deg, var(--gold-light), var(--gold));
-            color: #000; border: none; border-radius: 50px;
-            cursor: pointer; box-shadow: 0 10px 30px rgba(212, 175, 55, 0.3);
-            transition: 0.3s; text-transform: uppercase; letter-spacing: 2px;
+        @keyframes shake {
+            0% { transform: translate(1px, 1px) rotate(0deg); }
+            10% { transform: translate(-1px, -2px) rotate(-1deg); }
+            20% { transform: translate(-3px, 0px) rotate(1deg); }
+            30% { transform: translate(3px, 2px) rotate(0deg); }
+            40% { transform: translate(1px, -1px) rotate(1deg); }
+            50% { transform: translate(-1px, 2px) rotate(-1deg); }
+            60% { transform: translate(-3px, 1px) rotate(0deg); }
+            70% { transform: translate(3px, 1px) rotate(-1deg); }
+            80% { transform: translate(-1px, -1px) rotate(1deg); }
+            90% { transform: translate(1px, 2px) rotate(0deg); }
+            100% { transform: translate(1px, -2px) rotate(-1deg); }
         }
-        #btn-trigger:hover { transform: scale(1.05); box-shadow: 0 15px 40px rgba(212, 175, 55, 0.5); }
+
+        .progress-container {
+            width: 200px;
+            height: 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 10px;
+            margin: 20px auto;
+            overflow: hidden;
+            border: 1px solid var(--gold);
+            display: none;
+        }
+
+        #progress-bar {
+            width: 0%;
+            height: 100%;
+            background: linear-gradient(90deg, var(--gold-light), var(--gold));
+            transition: width 0.2s;
+        }
+
+        .instruction {
+            font-size: 14px;
+            color: var(--gold-light);
+            letter-spacing: 1px;
+            margin-top: 10px;
+            font-weight: 300;
+        }
 
         /* THIẾT KẾ THIỆP MỜI */
         #invitation-card {
@@ -100,7 +136,6 @@
             background-image: url('https://www.transparenttextures.com/patterns/hexellence.png');
         }
 
-        /* Góc Art Deco mỏng hơn cho tinh tế */
         .corner {
             position: absolute; width: 40px; height: 40px;
             border: 2px solid var(--gold);
@@ -116,7 +151,7 @@
         }
 
         .guest-name {
-            font-size: clamp(24px, 6vw, 32px); /* Tự điều chỉnh size theo màn hình */
+            font-size: clamp(24px, 6vw, 32px);
             font-weight: 900; color: var(--dark-emerald); margin: 0;
         }
 
@@ -162,11 +197,9 @@
             font-weight: 700; font-size: 14px; color: var(--gold);
         }
 
-        /* Mobile Adjustments */
         @media (max-width: 480px) {
             .card-inner-box { padding: 35px 15px; }
-            .info-grid { grid-template-columns: 1fr; gap: 15px; } /* Mobile dồn thành 1 cột */
-            .flask { font-size: 60px; }
+            .info-grid { grid-template-columns: 1fr; gap: 15px; }
         }
     </style>
 </head>
@@ -176,8 +209,14 @@
 
     <div class="main-container">
         <div class="intro-zone" id="intro">
-            <div class="flask" onclick="explode()">🧪</div>
-            <button id="btn-trigger" onclick="explode()">MỞ THIỆP</button>
+            <div class="flask-container" id="game-area">
+                <div class="flask" id="flask-icon" onclick="shakeGame()">🧪</div>
+            </div>
+            <div class="progress-container" id="p-container">
+                <div id="progress-bar"></div>
+            </div>
+            <p class="instruction" id="ins-text">ẤN LIÊN TỤC VÀO ỐNG NGHIỆM ĐỂ TRỘN HÓA CHẤT!</p>
+            <button id="btn-trigger" style="display:none"></button>
         </div>
 
         <div id="invitation-card">
@@ -191,7 +230,7 @@
                     <div class="header-label">TRÂN TRỌNG KÍNH MỜI</div>
                     
                     <div class="recipient-section">
-                        <p class="guest-name">NGUYỄN PHÚ QUÝ</p>
+                        <p class="guest-name">ÔNG NGUYỄN PHÚ QUÝ</p>
                         <p class="guest-title">Tổng Giám Đốc Vinagreen</p>
                     </div>
 
@@ -226,6 +265,49 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
+        // PHẦN GAME LẮC ỐNG NGHIỆM
+        let clickCount = 0;
+        const requiredClicks = 15;
+        let isExploded = false;
+
+        function shakeGame() {
+            if(isExploded) return;
+
+            clickCount++;
+            const flask = document.getElementById('flask-icon');
+            const progress = document.getElementById('progress-bar');
+            const pContainer = document.getElementById('p-container');
+            const insText = document.getElementById('ins-text');
+
+            // Hiển thị thanh progress khi bắt đầu click
+            pContainer.style.display = 'block';
+            
+            // Hiệu ứng phản hồi khi click
+            flask.style.transform = 'scale(1.2) rotate(10deg)';
+            setTimeout(() => { flask.style.transform = 'scale(1) rotate(0deg)'; }, 50);
+
+            // Cập nhật progress
+            let percent = (clickCount / requiredClicks) * 100;
+            progress.style.width = percent + '%';
+
+            // Thay đổi icon theo tiến độ cho hài hước
+            if(clickCount === 5) {
+                flask.innerHTML = '⚗️';
+                insText.innerText = 'SẮP KẾT TỦA RỒI...';
+            }
+            if(clickCount === 10) {
+                flask.classList.add('shake-anim');
+                flask.innerHTML = '💥';
+                insText.innerText = 'COI CHỪNG NỔ !!!';
+                insText.style.color = '#ff4d4d';
+            }
+
+            if(clickCount >= requiredClicks) {
+                isExploded = true;
+                explode();
+            }
+        }
+
         // NỀN HẠT (Bkg Particles)
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
@@ -276,23 +358,30 @@
             const intro = document.getElementById('intro');
             const card = document.getElementById('invitation-card');
 
-            // Ẩn intro mượt mà
-            intro.style.opacity = '0';
-            intro.style.transform = 'scale(0.8)';
-            
+            // Hiệu ứng nổ pháo hoa tại vị trí ống nghiệm
+            const rect = document.getElementById('flask-icon').getBoundingClientRect();
+            confetti({
+                particleCount: 150,
+                spread: 70,
+                origin: { x: 0.5, y: 0.5 },
+                colors: ['#d4af37', '#ffffff', '#ff0000']
+            });
+
             setTimeout(() => {
-                intro.style.display = 'none';
-                card.style.display = 'block';
-                // Trigger reflow
-                card.offsetHeight;
-                card.classList.add('show-card');
+                intro.style.opacity = '0';
+                intro.style.transform = 'scale(1.5)';
                 
-                // Hiệu ứng pháo hoa
-                runConfetti();
-            }, 500);
+                setTimeout(() => {
+                    intro.style.display = 'none';
+                    card.style.display = 'block';
+                    card.offsetHeight;
+                    card.classList.add('show-card');
+                    runConfettiLoop();
+                }, 500);
+            }, 300);
         }
 
-        function runConfetti() {
+        function runConfettiLoop() {
             const duration = 3 * 1000;
             const animationEnd = Date.now() + duration;
             const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
