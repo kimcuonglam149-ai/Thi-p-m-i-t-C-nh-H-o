@@ -73,29 +73,31 @@
         }
 
         .progress-container {
-            width: 200px;
-            height: 10px;
-            background: rgba(255,255,255,0.1);
-            border-radius: 10px;
-            margin: 20px auto;
+            width: 220px;
+            height: 12px;
+            background: rgba(255,255,255,0.05);
+            border-radius: 20px;
+            margin: 25px auto;
             overflow: hidden;
-            border: 1px solid var(--gold);
+            border: 1px solid rgba(212, 175, 55, 0.4);
             display: none;
+            box-shadow: 0 0 15px rgba(212, 175, 55, 0.1);
         }
 
         #progress-bar {
             width: 0%;
             height: 100%;
             background: linear-gradient(90deg, var(--gold-light), var(--gold));
-            transition: width 0.2s;
+            transition: width 0.15s ease-out;
         }
 
         .instruction {
-            font-size: 14px;
+            font-size: 13px;
             color: var(--gold-light);
-            letter-spacing: 1px;
+            letter-spacing: 2px;
             margin-top: 10px;
-            font-weight: 300;
+            font-weight: 400;
+            opacity: 0.8;
         }
 
         /* THIẾT KẾ THIỆP MỜI */
@@ -147,17 +149,33 @@
 
         .header-label {
             font-weight: 600; letter-spacing: 4px;
-            color: var(--gold); font-size: 12px; margin-bottom: 20px;
+            color: var(--gold); font-size: 11px; margin-bottom: 25px;
+        }
+
+        /* ĐÃ SỬA: Chữ Ông nhỏ lại, Tên to ra */
+        .salutation {
+            font-size: 16px;
+            color: #777;
+            font-weight: 400;
+            margin-bottom: 2px;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            display: block;
         }
 
         .guest-name {
-            font-size: clamp(24px, 6vw, 32px);
-            font-weight: 900; color: var(--dark-emerald); margin: 0;
+            font-size: clamp(28px, 7vw, 38px);
+            font-weight: 900; 
+            color: var(--dark-emerald); 
+            margin: 0;
+            line-height: 1.2;
+            letter-spacing: -0.5px;
         }
 
         .guest-title {
-            font-size: 13px; color: #777; margin-top: 8px;
-            text-transform: uppercase; letter-spacing: 1px;
+            font-size: 12px; color: #888; margin-top: 10px;
+            text-transform: uppercase; letter-spacing: 1.5px;
+            font-weight: 600;
         }
 
         .title-main {
@@ -215,8 +233,7 @@
             <div class="progress-container" id="p-container">
                 <div id="progress-bar"></div>
             </div>
-            <p class="instruction" id="ins-text">ẤN LIÊN TỤC VÀO ỐNG NGHIỆM ĐỂ TRỘN HÓA CHẤT!</p>
-            <button id="btn-trigger" style="display:none"></button>
+            <p class="instruction" id="ins-text">NHẤP LIÊN TỤC ĐỂ TRỘN HÓA CHẤT!</p>
         </div>
 
         <div id="invitation-card">
@@ -230,7 +247,8 @@
                     <div class="header-label">TRÂN TRỌNG KÍNH MỜI</div>
                     
                     <div class="recipient-section">
-                        <p class="guest-name">ÔNG NGUYỄN PHÚ QUÝ</p>
+                        <span class="salutation">Ông</span>
+                        <p class="guest-name">NGUYỄN PHÚ QUÝ</p>
                         <p class="guest-title">Tổng Giám Đốc Vinagreen</p>
                     </div>
 
@@ -265,9 +283,8 @@
 
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
-        // PHẦN GAME LẮC ỐNG NGHIỆM
         let clickCount = 0;
-        const requiredClicks = 15;
+        const requiredClicks = 12; // Giảm xuống 12 để không quá mỏi tay
         let isExploded = false;
 
         function shakeGame() {
@@ -279,27 +296,23 @@
             const pContainer = document.getElementById('p-container');
             const insText = document.getElementById('ins-text');
 
-            // Hiển thị thanh progress khi bắt đầu click
             pContainer.style.display = 'block';
             
-            // Hiệu ứng phản hồi khi click
-            flask.style.transform = 'scale(1.2) rotate(10deg)';
-            setTimeout(() => { flask.style.transform = 'scale(1) rotate(0deg)'; }, 50);
+            flask.style.transform = 'scale(1.3) rotate(15deg)';
+            setTimeout(() => { flask.style.transform = 'scale(1) rotate(0deg)'; }, 60);
 
-            // Cập nhật progress
             let percent = (clickCount / requiredClicks) * 100;
             progress.style.width = percent + '%';
 
-            // Thay đổi icon theo tiến độ cho hài hước
-            if(clickCount === 5) {
+            if(clickCount === 4) {
                 flask.innerHTML = '⚗️';
-                insText.innerText = 'SẮP KẾT TỦA RỒI...';
+                insText.innerText = 'ĐANG PHẢN ỨNG...';
             }
-            if(clickCount === 10) {
+            if(clickCount === 8) {
                 flask.classList.add('shake-anim');
                 flask.innerHTML = '💥';
-                insText.innerText = 'COI CHỪNG NỔ !!!';
-                insText.style.color = '#ff4d4d';
+                insText.innerText = 'SẮP NỔ RỒI !!!';
+                insText.style.color = '#d4af37';
             }
 
             if(clickCount >= requiredClicks) {
@@ -308,7 +321,6 @@
             }
         }
 
-        // NỀN HẠT (Bkg Particles)
         const canvas = document.getElementById('particle-canvas');
         const ctx = canvas.getContext('2d');
         let particles = [];
@@ -353,59 +365,44 @@
         }
         init(); window.onresize = init; anim();
 
-        // HIỆU ỨNG MỞ THIỆP
         function explode() {
             const intro = document.getElementById('intro');
             const card = document.getElementById('invitation-card');
 
-            // Hiệu ứng nổ pháo hoa tại vị trí ống nghiệm
-            const rect = document.getElementById('flask-icon').getBoundingClientRect();
             confetti({
                 particleCount: 150,
-                spread: 70,
-                origin: { x: 0.5, y: 0.5 },
-                colors: ['#d4af37', '#ffffff', '#ff0000']
+                spread: 100,
+                origin: { y: 0.6 },
+                colors: ['#d4af37', '#ffffff', '#022a1a']
             });
 
             setTimeout(() => {
                 intro.style.opacity = '0';
-                intro.style.transform = 'scale(1.5)';
+                intro.style.transform = 'scale(0.5)';
                 
                 setTimeout(() => {
                     intro.style.display = 'none';
                     card.style.display = 'block';
-                    card.offsetHeight;
                     card.classList.add('show-card');
                     runConfettiLoop();
-                }, 500);
-            }, 300);
+                }, 400);
+            }, 200);
         }
 
         function runConfettiLoop() {
-            const duration = 3 * 1000;
+            const duration = 3000;
             const animationEnd = Date.now() + duration;
-            const defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 0 };
-
-            function randomInRange(min, max) {
-              return Math.random() * (max - min) + min;
-            }
-
             const interval = setInterval(function() {
               const timeLeft = animationEnd - Date.now();
               if (timeLeft <= 0) return clearInterval(interval);
-
-              const particleCount = 50 * (timeLeft / duration);
-              confetti(Object.assign({}, defaults, { 
-                particleCount, 
-                origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 },
+              confetti({
+                particleCount: 40,
+                startVelocity: 30,
+                spread: 360,
+                origin: { x: Math.random(), y: Math.random() - 0.2 },
                 colors: ['#d4af37', '#ffffff']
-              }));
-              confetti(Object.assign({}, defaults, { 
-                particleCount, 
-                origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 },
-                colors: ['#d4af37', '#ffffff']
-              }));
-            }, 250);
+              });
+            }, 200);
         }
     </script>
 </body>
