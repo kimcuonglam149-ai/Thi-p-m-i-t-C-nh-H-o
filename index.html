@@ -15,81 +15,152 @@
             --green: #39ff14;
         }
 
-        * { box-sizing: border-box; margin: 0; padding: 0; }
-        body { background: var(--bg-dark); font-family: 'Montserrat', sans-serif; color: #fff; height: 100vh; overflow: hidden; display: flex; justify-content: center; align-items: center; }
+        * { box-sizing: border-box; margin: 0; padding: 0; -webkit-tap-highlight-color: transparent; }
+        
+        body, html { 
+            background: var(--bg-dark); 
+            font-family: 'Montserrat', sans-serif; 
+            color: #fff; 
+            height: 100%; 
+            width: 100%;
+            overflow: hidden; 
+            position: fixed; /* Chống cuộn trên iOS */
+        }
 
         #bg-canvas { position: fixed; inset: 0; z-index: 1; opacity: 0.6; }
-        .grid-overlay { position: fixed; inset: 0; z-index: 2; background-image: radial-gradient(circle at 1.5px 1.5px, rgba(255,255,255,0.05) 1px, transparent 0); background-size: 30px 30px; }
+        .grid-overlay { position: fixed; inset: 0; z-index: 2; background-image: radial-gradient(circle at 1px 1px, rgba(255,255,255,0.05) 1px, transparent 0); background-size: 25px 25px; }
 
-        .main-container { position: relative; z-index: 10; width: 100%; max-width: 800px; padding: 20px; }
-
-        /* LOGIN ZONE */
-        .login-zone { 
-            background: rgba(10, 15, 20, 0.95); padding: 50px 30px; border-radius: 20px; 
-            border: 1px solid var(--gold); box-shadow: 0 0 40px rgba(241, 196, 15, 0.2); 
-            text-align: center; backdrop-filter: blur(15px);
+        .main-container { 
+            position: relative; 
+            z-index: 10; 
+            width: 100%; 
+            height: 100%;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 15px;
         }
+
+        /* KHUNG CHUNG */
+        .panel { 
+            background: rgba(10, 15, 20, 0.95); 
+            width: 100%;
+            max-width: 450px;
+            padding: 40px 20px; 
+            border-radius: 20px; 
+            border: 1px solid var(--gold); 
+            box-shadow: 0 0 30px rgba(241, 196, 15, 0.2); 
+            text-align: center; 
+            backdrop-filter: blur(15px);
+            animation: fadeIn 0.6s ease-out;
+        }
+
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.9); } to { opacity: 1; transform: scale(1); } }
 
         input[type="text"] { 
-            width: 90%; max-width: 400px; padding: 15px; background: transparent; border: none; 
-            border-bottom: 2px solid var(--gold); color: #fff; font-size: 1.6rem; 
-            text-align: center; margin-bottom: 30px; outline: none; font-family: 'Montserrat';
+            width: 100%; 
+            padding: 12px; 
+            background: transparent; 
+            border: none; 
+            border-bottom: 2px solid var(--gold); 
+            color: #fff; 
+            font-size: 1.4rem; 
+            text-align: center; 
+            margin-bottom: 30px; 
+            outline: none; 
+            font-family: 'Montserrat';
         }
 
-        /* LAB ZONE */
-        .game-zone { display: none; text-align: center; }
+        /* LAB ZONE MOBILE */
+        .game-zone { display: none; width: 100%; max-width: 450px; }
         .flask-main { 
-            width: 130px; height: 170px; border: 3px solid rgba(255,255,255,0.5); 
-            border-radius: 15px 15px 65px 65px; position: relative; margin: 0 auto 40px;
+            width: 100px; height: 140px; 
+            border: 3px solid rgba(255,255,255,0.5); 
+            border-radius: 10px 10px 50px 50px; 
+            position: relative; margin: 0 auto 30px;
             overflow: hidden; background: rgba(255,255,255,0.05);
         }
         .liquid-fill { position: absolute; bottom: 0; width: 100%; height: 0%; transition: 0.8s ease; }
 
-        .tube-rack { display: flex; gap: 25px; justify-content: center; }
+        .tube-rack { display: flex; gap: 20px; justify-content: center; }
         .tube { 
-            width: 50px; height: 110px; border: 2px solid rgba(255,255,255,0.4); border-radius: 0 0 25px 25px; 
-            cursor: pointer; position: relative; transition: 0.4s; overflow: hidden;
+            width: 45px; height: 100px; 
+            border: 2px solid rgba(255,255,255,0.4); 
+            border-radius: 0 0 20px 20px; 
+            cursor: pointer; position: relative;
         }
-        .tube-inner { position: absolute; inset: 4px; border-radius: 0 0 20px 20px; }
+        .tube-inner { position: absolute; inset: 4px; border-radius: 0 0 15px 15px; }
 
-        /* CARD ZONE */
-        .card-wrapper { display: none; position: relative; perspective: 1000px; }
+        /* CARD ZONE MOBILE */
+        .card-wrapper { 
+            display: none; 
+            width: 100%; 
+            max-width: 380px; 
+            position: relative; 
+            perspective: 1000px;
+        }
+        
         .magic-aura { 
-            position: absolute; inset: -15%; 
-            background: radial-gradient(circle, rgba(241,196,15,0.25) 0%, transparent 75%); 
-            z-index: -1; animation: rotateAura 15s linear infinite; 
+            position: absolute; inset: -10%; 
+            background: radial-gradient(circle, rgba(241,196,15,0.3) 0%, transparent 70%); 
+            z-index: -1; animation: rotateAura 10s linear infinite; 
         }
         @keyframes rotateAura { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
 
-        #invitation-card { 
-            width: 100%; background: #fff; padding: 12px; border-radius: 4px; 
-            box-shadow: 0 30px 80px rgba(0,0,0,0.8); position: relative; 
+        .invitation-card { 
+            width: 100%; 
+            background: #fff; 
+            padding: 8px; 
+            border-radius: 5px; 
+            box-shadow: 0 20px 50px rgba(0,0,0,0.8);
+            color: #1a1a1a;
         }
-
+        
         .card-content { 
             background: url('https://www.transparenttextures.com/patterns/marble-similar.png'), #fff; 
-            border: 1px solid #d4af37; padding: 60px 40px; text-align: center; color: #1a1a1a; 
+            border: 1px solid #d4af37; 
+            padding: 35px 15px; 
+            text-align: center; 
         }
 
         .guest-name { 
-            font-family: 'Great Vibes', cursive; font-size: 3.8rem; margin: 10px 0; 
-            background: var(--gold-gradient); -webkit-background-clip: text; -webkit-text-fill-color: transparent;
-            line-height: 1.2;
+            font-family: 'Great Vibes', cursive; 
+            font-size: clamp(2.2rem, 8vw, 3.2rem); /* Tự co giãn theo màn hình */
+            margin: 10px 0; 
+            background: var(--gold-gradient); 
+            -webkit-background-clip: text; 
+            -webkit-text-fill-color: transparent;
+            line-height: 1.1;
         }
         
-        .event-title { font-family: 'Cinzel'; font-size: 3.2rem; color: #111; letter-spacing: 4px; margin: 15px 0; font-weight: 900; }
-        .divider-art { width: 80%; max-width: 300px; height: 30px; margin: 20px auto; background: url('https://www.transparentpng.com/download/gold-line/vY6P0S-gold-line-decorative-design-element-clip-art.png') no-repeat center; background-size: contain; }
+        .event-title { font-family: 'Cinzel'; font-size: 1.8rem; letter-spacing: 2px; margin: 10px 0; font-weight: 900; }
+        .divider-art { width: 70%; height: 20px; margin: 15px auto; background: url('https://www.transparentpng.com/download/gold-line/vY6P0S-gold-line-decorative-design-element-clip-art.png') no-repeat center; background-size: contain; }
 
-        .info-grid { display: grid; grid-template-columns: 1fr 1fr; margin: 30px 0; border-top: 1px solid #eee; border-bottom: 1px solid #eee; padding: 25px 0; }
-        .info-item b { font-family: 'Cinzel'; font-size: 1.5rem; display: block; color: #000; margin-top: 5px; }
-        .info-item small { color: #888; font-weight: 700; letter-spacing: 2px; text-transform: uppercase; font-size: 0.75rem; }
+        .info-grid { 
+            display: grid; 
+            grid-template-columns: 1fr; 
+            gap: 15px; 
+            margin: 20px 0; 
+            border-top: 1px solid #eee; 
+            border-bottom: 1px solid #eee; 
+            padding: 15px 0; 
+        }
+        .info-item b { font-family: 'Cinzel'; font-size: 1.1rem; color: #000; }
+        .info-item small { color: #888; font-weight: 700; letter-spacing: 1px; text-transform: uppercase; font-size: 0.65rem; }
 
-        .footer-note { font-style: italic; color: #666; font-size: 0.95rem; margin-top: 30px; line-height: 1.6; }
+        .footer-note { font-style: italic; color: #555; font-size: 0.85rem; margin-top: 20px; line-height: 1.5; padding: 0 5px; }
 
-        @media (max-width: 600px) {
-            .event-title { font-size: 2.2rem; }
-            .guest-name { font-size: 3rem; }
-            .info-grid { grid-template-columns: 1fr; gap: 20px; }
+        button {
+            background: var(--gold-gradient); 
+            border: none; 
+            padding: 15px 40px; 
+            font-weight: 900; 
+            cursor: pointer; 
+            border-radius: 50px; 
+            font-family: 'Cinzel'; 
+            color: #000;
+            font-size: 0.9rem;
+            box-shadow: 0 5px 15px rgba(241, 196, 15, 0.3);
         }
     </style>
 </head>
@@ -99,37 +170,37 @@
     <canvas id="bg-canvas"></canvas>
 
     <div class="main-container">
-        <div class="login-zone" id="login-zone">
-            <h2 style="font-family:'Cinzel'; color:var(--gold); letter-spacing: 5px;">VIP ACCESS</h2>
-            <p style="font-size: 0.8rem; color:#666; margin: 10px 0 35px;">AUTHENTICATION REQUIRED</p>
-            <input type="text" id="input-name" placeholder="Họ và tên..." maxlength="25">
+        <div class="panel" id="login-zone">
+            <h2 style="font-family:'Cinzel'; color:var(--gold); letter-spacing: 3px; font-size: 1.5rem;">VIP ACCESS</h2>
+            <p style="font-size: 0.7rem; color:#888; margin: 10px 0 30px;">XÁC NHẬN DANH TÁNH</p>
+            <input type="text" id="input-name" placeholder="Họ và tên..." maxlength="20">
             <br>
-            <button onclick="toLab()" style="background:var(--gold-gradient); border:none; padding:18px 60px; font-weight:900; cursor:pointer; border-radius:4px; font-family:'Cinzel'; color:#000;">TIẾP TỤC</button>
+            <button onclick="toLab()">TIẾP TỤC</button>
         </div>
 
-        <div class="game-zone" id="game-zone">
-            <h3 style="font-family:'Cinzel'; color:var(--gold); margin-bottom:40px;">HOÀ TRỘN TINH CHẤT SỰ KIỆN</h3>
+        <div class="panel game-zone" id="game-zone">
+            <h3 style="font-family:'Cinzel'; color:var(--gold); margin-bottom:25px; font-size: 1rem;">HOÀ TRỘN TINH CHẤT</h3>
             <div class="flask-main"><div class="liquid-fill" id="fill"></div></div>
             <div class="tube-rack">
-                <div class="tube" onclick="pour('red')"><div class="tube-inner" style="background:var(--red); box-shadow: 0 0 15px var(--red);"></div></div>
-                <div class="tube" onclick="pour('blue')"><div class="tube-inner" style="background:var(--blue); box-shadow: 0 0 15px var(--blue);"></div></div>
-                <div class="tube" onclick="pour('green')"><div class="tube-inner" style="background:var(--green); box-shadow: 0 0 15px var(--green);"></div></div>
+                <div class="tube" onclick="pour('red')"><div class="tube-inner" style="background:var(--red); box-shadow: 0 0 10px var(--red);"></div></div>
+                <div class="tube" onclick="pour('blue')"><div class="tube-inner" style="background:var(--blue); box-shadow: 0 0 10px var(--blue);"></div></div>
+                <div class="tube" onclick="pour('green')"><div class="tube-inner" style="background:var(--green); box-shadow: 0 0 10px var(--green);"></div></div>
             </div>
         </div>
 
         <div class="card-wrapper" id="card-wrapper">
             <div class="magic-aura"></div>
-            <div id="invitation-card">
+            <div class="invitation-card">
                 <div class="card-content">
-                    <p style="letter-spacing: 5px; font-size: 0.75rem; font-weight: 700; color: #999;">TRÂN TRỌNG KÍNH MỜI</p>
+                    <p style="letter-spacing: 3px; font-size: 0.65rem; font-weight: 700; color: #999;">TRÂN TRỌNG KÍNH MỜI</p>
                     <h2 class="guest-name" id="name-display">Guest Name</h2>
                     <div class="divider-art"></div>
                     <h1 class="event-title">TIỆC TẤT NIÊN</h1>
                     <div class="info-grid">
                         <div class="info-item"><small>THỜI GIAN</small><b>18:00 | 30.01.2025</b></div>
-                        <div class="info-item"><small>ĐỊA ĐIỂM</small><b>Nhà hàng DIM TU TAC</b><p style="font-size: 0.8rem; color: #777;">Quận 1, TP.HCM</p></div>
+                        <div class="info-item"><small>ĐỊA ĐIỂM</small><b>Nhà hàng DIM TU TAC</b><p style="font-size: 0.75rem; color: #777;">Đông Du, Quận 1, TP.HCM</p></div>
                     </div>
-                    <p style="font-family: 'Cinzel'; font-weight: 900; color: #b38728; letter-spacing: 3px; font-size: 1.2rem;">CÔNG TY TNHH TM CẢNH HÀO</p>
+                    <p style="font-family: 'Cinzel'; font-weight: 900; color: #b38728; letter-spacing: 2px; font-size: 1rem;">CÔNG TY TNHH TM CẢNH HÀO</p>
                     <p class="footer-note">"Sự hiện diện của Quý vị là niềm vinh hạnh to lớn đối với chúng tôi trong buổi tiệc gặp gỡ cuối năm này."</p>
                 </div>
             </div>
@@ -139,76 +210,62 @@
     <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <script>
         let mix = 0;
-        let colorsUsed = new Set();
+        let used = new Set();
 
         function toLab() {
-            let name = document.getElementById('input-name').value;
-            if(!name.trim()) return alert("Vui lòng cho biết quý danh!");
-            
-            // XỬ LÝ VIẾT HOA CHỮ CÁI ĐẦU
-            name = name.toLowerCase().split(' ').map(word => word.charAt(0).toUpperCase() + word.slice(1)).join(' ');
-            
-            document.getElementById('name-display').innerText = name;
+            let n = document.getElementById('input-name').value;
+            if(!n.trim()) return alert("Vui lòng nhập tên!");
+            // Viết hoa chữ cái đầu
+            n = n.toLowerCase().split(' ').map(s => s.charAt(0).toUpperCase() + s.substring(1)).join(' ');
+            document.getElementById('name-display').innerText = n;
             document.getElementById('login-zone').style.display = 'none';
             document.getElementById('game-zone').style.display = 'block';
         }
 
         function pour(c) {
-            if(colorsUsed.has(c)) return;
-            colorsUsed.add(c);
+            if(used.has(c)) return;
+            used.add(c);
             mix++;
-            const fill = document.getElementById('fill');
-            fill.style.height = (mix * 33.4) + "%";
-            if(c === 'red') fill.style.background = "var(--red)";
-            if(c === 'blue') fill.style.background = "var(--blue)";
-            if(c === 'green') fill.style.background = "var(--green)";
+            const f = document.getElementById('fill');
+            f.style.height = (mix * 33.4) + "%";
+            if(c === 'red') f.style.background = "var(--red)";
+            if(c === 'blue') f.style.background = "var(--blue)";
+            if(c === 'green') f.style.background = "var(--green)";
             if(mix === 3) {
-                fill.style.background = "var(--gold-gradient)";
-                fill.style.boxShadow = "0 0 40px var(--gold)";
+                f.style.background = "var(--gold-gradient)";
                 setTimeout(() => {
                     document.getElementById('game-zone').style.display = 'none';
                     document.getElementById('card-wrapper').style.display = 'block';
-                    confetti({ particleCount: 400, spread: 100, origin: { y: 0.7 }, colors:['#f1c40f', '#fff'] });
-                }, 1000);
+                    confetti({ particleCount: 300, spread: 80, origin: { y: 0.8 } });
+                }, 800);
             }
         }
 
-        // BACKGROUND ANIMATION
         const canvas = document.getElementById('bg-canvas');
         const ctx = canvas.getContext('2d');
-        let particles = [];
-        let bubbles = [];
-
+        let pts = [];
         function init() {
-            canvas.width = window.innerWidth;
-            canvas.height = window.innerHeight;
-            particles = []; bubbles = [];
-            for(let i=0; i<40; i++) particles.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, vx: Math.random()*0.5-0.25, vy: Math.random()*0.5-0.25});
-            for(let i=0; i<25; i++) bubbles.push({x: Math.random()*canvas.width, y: canvas.height+10, r: Math.random()*3+1, v: Math.random()*1+0.5});
+            canvas.width = window.innerWidth; canvas.height = window.innerHeight;
+            pts = [];
+            for(let i=0; i<30; i++) pts.push({x: Math.random()*canvas.width, y: Math.random()*canvas.height, vx: Math.random()-0.5, vy: Math.random()-0.5});
         }
-
-        function animate() {
+        function draw() {
             ctx.clearRect(0,0,canvas.width, canvas.height);
             ctx.strokeStyle = "rgba(241, 196, 15, 0.1)";
-            ctx.fillStyle = "rgba(241, 196, 15, 0.3)";
-            particles.forEach((p, i) => {
+            ctx.fillStyle = "rgba(241, 196, 15, 0.2)";
+            pts.forEach((p, i) => {
                 p.x += p.vx; p.y += p.vy;
                 if(p.x<0 || p.x>canvas.width) p.vx *= -1;
                 if(p.y<0 || p.y>canvas.height) p.vy *= -1;
                 ctx.beginPath(); ctx.arc(p.x, p.y, 2, 0, Math.PI*2); ctx.fill();
-                for(let j=i+1; j<particles.length; j++){
-                    let d = Math.hypot(p.x-particles[j].x, p.y-particles[j].y);
-                    if(d<150) { ctx.beginPath(); ctx.moveTo(p.x,p.y); ctx.lineTo(particles[j].x, particles[j].y); ctx.stroke(); }
+                for(let j=i+1; j<pts.length; j++){
+                    let d = Math.hypot(p.x-pts[j].x, p.y-pts[j].y);
+                    if(d<120) { ctx.beginPath(); ctx.moveTo(p.x, p.y); ctx.lineTo(pts[j].x, pts[j].y); ctx.stroke(); }
                 }
             });
-            bubbles.forEach(b => {
-                b.y -= b.v; if(b.y < -10) b.y = canvas.height+10;
-                ctx.beginPath(); ctx.arc(b.x, b.y, b.r, 0, Math.PI*2);
-                ctx.fillStyle = "rgba(255,255,255,0.2)"; ctx.fill();
-            });
-            requestAnimationFrame(animate);
+            requestAnimationFrame(draw);
         }
-        init(); animate(); window.onresize = init;
+        init(); draw(); window.onresize = init;
     </script>
 </body>
 </html>
